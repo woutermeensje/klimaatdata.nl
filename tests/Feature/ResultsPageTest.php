@@ -12,6 +12,12 @@ class ResultsPageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Top 10 gemeenten');
+        $response->assertSee('EV per 1.000 inwoners');
+        $response->assertSee('Elektrische auto');
+        $response->assertSee('Aandeel elektrische auto');
+        $response->assertSee('EV per 1.000 inwoners in Nederland');
+        $response->assertSee('Top 12 provincies');
+        $response->assertSee('2015');
     }
 
     public function test_results_csv_download_is_available(): void
@@ -20,6 +26,7 @@ class ResultsPageTest extends TestCase
 
         $response->assertOk();
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        $response->assertHeader('Content-Disposition', 'attachment; filename=klimaatdata-resultaten.csv');
     }
 
     public function test_results_excel_download_is_available(): void

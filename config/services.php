@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'klimaatmonitor' => [
+        'key' => env('KLIMAATMONITOR_API_KEY'),
+        'base_url' => env('KLIMAATMONITOR_BASE_URL', 'https://klimaatmonitor.databank.nl/jiveservices/odata'),
+    ],
+
 ];

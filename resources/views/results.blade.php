@@ -297,6 +297,231 @@
 
         <div class="grid" style="margin-top:1.25rem;">
             <section class="card" style="grid-column: 1 / -1;">
+                <h2>De correcte top 10 (eindgebruiker, geen lease-vertekening, 2024)</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">
+                    Gebaseerd op registratie bij eindgebruiker in plaats van eigenaar — hierdoor
+                    vertekenen leasemaatschappijen (zoals bij Ouder-Amstel en Houten in de ruwe tabel
+                    hierboven) de cijfers niet meer.
+                </p>
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Gemeente</th>
+                            <th class="right">Aantal</th>
+                            <th class="right">EV per 1.000 inwoners</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($topMunicipalitiesEndUser as $entry)
+                            <tr>
+                                <td>{{ $entry['rank'] }}</td>
+                                <td>{{ $entry['gemeente'] }}</td>
+                                <td class="right">{{ number_format($entry['aantal'], 0, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['per_1000_inwoners'], 2, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="card" style="grid-column: 1 / -1;">
+                <h2>Populairste type elektrisch voertuig (laatste 5 jaar)</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Aantal geregistreerde voertuigen per type, Nederland totaal, gesorteerd op 2024.</p>
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Type</th>
+                            @foreach ($vehicleTypesTrendYears as $year)
+                                <th class="right">{{ $year }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($vehicleTypesTrend as $entry)
+                            <tr>
+                                <td>{{ $entry['rank'] }}</td>
+                                <td>{{ $entry['type'] }}</td>
+                                @foreach ($entry['waarden'] as $waarde)
+                                    <td class="right">{{ number_format($waarde, 0, ',', '.') }}</td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <div class="grid" style="margin-top:1.25rem;">
+            <section class="card" style="grid-column: 1 / -1;">
+                <h2>Brandstofvergelijking per provincie — aantal (2024)</h2>
+                <div style="overflow-x:auto;">
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Provincie</th>
+                            <th class="right">Benzine</th>
+                            <th class="right">Diesel</th>
+                            <th class="right">LPG</th>
+                            <th class="right">CNG</th>
+                            <th class="right">Elektrisch</th>
+                            <th class="right">PHEV</th>
+                            <th class="right">Waterstof</th>
+                            <th class="right">Totaal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($fuelComparisonAbsolute as $provincie => $fuels)
+                            <tr>
+                                <td>{{ $provincie }}</td>
+                                @foreach (['Benzine','Diesel','LPG','CNG','Elektrisch','PHEV','Waterstof','Totaal'] as $label)
+                                    <td class="right">{{ number_format($fuels[$label], 0, ',', '.') }}</td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                </div>
+            </section>
+
+            <section class="card" style="grid-column: 1 / -1;">
+                <h2>Brandstofvergelijking per provincie — aandeel (%)</h2>
+                <div style="overflow-x:auto;">
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Provincie</th>
+                            <th class="right">Benzine</th>
+                            <th class="right">Diesel</th>
+                            <th class="right">LPG</th>
+                            <th class="right">CNG</th>
+                            <th class="right">Elektrisch</th>
+                            <th class="right">PHEV</th>
+                            <th class="right">Waterstof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($fuelComparisonPercentage as $entry)
+                            <tr>
+                                <td>{{ $entry['provincie'] }}</td>
+                                @foreach (['Benzine','Diesel','LPG','CNG','Elektrisch','PHEV','Waterstof'] as $label)
+                                    <td class="right">{{ number_format($entry[$label], 1, ',', '.') }}%</td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="grid" style="margin-top:1.25rem;">
+            <section class="card">
+                <h2>Laadpunten per provincie</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Totaal aantal laadpunten (publiek, semi-publiek, thuis en werk), 2024.</p>
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Provincie</th>
+                            <th class="right">Aantal laadpunten</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($chargingPointsProvincial as $entry)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $entry['provincie'] }}</td>
+                                <td class="right">{{ number_format($entry['aantal'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="card">
+                <h2>Top 10 gemeenten met de meeste laadpunten</h2>
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Gemeente</th>
+                            <th class="right">Aantal laadpunten</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($chargingPointsTopMunicipalities as $entry)
+                            <tr>
+                                <td>{{ $entry['rank'] }}</td>
+                                <td>{{ $entry['gemeente'] }}</td>
+                                <td class="right">{{ number_format($entry['aantal'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="card" style="grid-column: 1 / -1;">
+                <h2>Laadpunten per elektrische auto per provincie</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Aantal laadpunten gedeeld door het aantal EV’s, van hoog naar laag.</p>
+                <table style="margin-top:1rem;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Provincie</th>
+                            <th class="right">EV’s</th>
+                            <th class="right">Laadpunten</th>
+                            <th class="right">Laadpunten per EV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($chargingPointsPerEvProvincial as $entry)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $entry['provincie'] }}</td>
+                                <td class="right">{{ number_format($entry['aantal_ev'], 0, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['aantal_laadpunten'], 0, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['laadpunten_per_ev'], 3, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <div class="grid" style="margin-top:1.25rem;">
+            <section class="card" style="grid-column: 1 / -1;">
+                <h2>Auto's per huishouden (2010-2024)</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Gemiddeld aantal geregistreerde personenauto's per huishouden, Nederland — licht stijgend, geen daling.</p>
+                <div class="chart-wrap">
+                    <div class="chart">
+                        @php
+                            $maxCarsPerHousehold = max(array_column($carsPerHouseholdTrend, 'aantal'));
+                            $minCarsPerHousehold = min(array_column($carsPerHouseholdTrend, 'aantal'));
+                        @endphp
+                        @foreach ($carsPerHouseholdTrend as $entry)
+                            @php
+                                $height = $maxCarsPerHousehold > 0 ? ($entry['aantal'] / $maxCarsPerHousehold) * 100 : 0;
+                            @endphp
+                            <div class="bar-col">
+                                <span class="bar-value">{{ number_format($entry['aantal'], 2, ',', '.') }}</span>
+                                <div class="bar" style="height: {{ $height }}%;"></div>
+                                <span class="bar-label">{{ $entry['jaar'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <p class="muted" style="font-size:.85rem;">
+                    Van {{ number_format($minCarsPerHousehold, 2, ',', '.') }} ({{ $carsPerHouseholdTrend[0]['jaar'] }})
+                    naar {{ number_format(end($carsPerHouseholdTrend)['aantal'], 2, ',', '.') }}
+                    ({{ end($carsPerHouseholdTrend)['jaar'] }}) — een lichte, gestage stijging, geen daling.
+                </p>
+            </section>
+        </div>
+
+        <div class="grid" style="margin-top:1.25rem;">
+            <section class="card" style="grid-column: 1 / -1;">
                 <h2>Elektrische auto’s in Nederland (totaal per jaar)</h2>
                 <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Schaal: totaal aantal EV’s, zoveel als beschikbaar in deze dataset voor de afgelopen jaren.</p>
                 <div class="chart-wrap">
@@ -411,6 +636,60 @@
             </section>
 
             <section class="card" style="grid-column: 1 / -1;">
+                <h2>Top 3 provincies op EV-score</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Scoremodel gebaseerd op EV per 1.000 inwoners, laadinfrastructuur, groei en totaal aantal EV's.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Provincie</th>
+                            <th class="right">Score</th>
+                            <th class="right">EV / 1.000</th>
+                            <th class="right">Laadpunten / 1.000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($provincialReadiness as $entry)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $entry['provincie'] }}</td>
+                                <td class="right">{{ number_format($entry['score'], 1, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['ev_per_1000'], 2, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['laadpunten_per_1000'], 1, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="card" style="grid-column: 1 / -1;">
+                <h2>Top 3 gemeenten op EV-score</h2>
+                <p class="muted" style="margin-top:-.3rem; margin-bottom:0;">Scoremodel gebaseerd op EV per 1.000 inwoners, laadinfrastructuur, groei en totaal aantal EV's.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Gemeente</th>
+                            <th class="right">Score</th>
+                            <th class="right">EV / 1.000</th>
+                            <th class="right">Laadpunten / 1.000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($municipalReadiness as $entry)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $entry['gemeente'] }}</td>
+                                <td class="right">{{ number_format($entry['score'], 1, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['ev_per_1000'], 2, ',', '.') }}</td>
+                                <td class="right">{{ number_format($entry['laadpunten_per_1000'], 1, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="card" style="grid-column: 1 / -1;">
                 <h2>Top 12 provincies met het hoogste aantal EV's per inwoner</h2>
                 <table>
                     <thead>
@@ -444,7 +723,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($provincialCounts as $entry)
+                        @foreach ($provincialTotals as $entry)
                             <tr>
                                 <td>{{ $entry['provincie'] }}</td>
                                 <td class="right">{{ number_format($entry['aantal'], 0, ',', '.') }}</td>

@@ -17,7 +17,19 @@ class ResultsController extends Controller
             'lowestMunicipalities' => $data['lowestMunicipalities'],
             'topMunicipalitiesPerCapita' => $data['topMunicipalitiesPerCapita'],
             'lowestMunicipalitiesPerCapita' => $data['lowestMunicipalitiesPerCapita'],
+            'topMunicipalitiesEndUser' => $data['topMunicipalitiesEndUser'],
+            'vehicleTypesTrend' => $data['vehicleTypesTrend'],
+            'vehicleTypesTrendYears' => $data['vehicleTypesTrendYears'],
+            'fuelComparisonAbsolute' => $data['fuelComparisonAbsolute'],
+            'fuelComparisonPercentage' => $data['fuelComparisonPercentage'],
+            'chargingPointsProvincial' => $data['chargingPointsProvincial'],
+            'chargingPointsPerEvProvincial' => $data['chargingPointsPerEvProvincial'],
+            'chargingPointsTopMunicipalities' => $data['chargingPointsTopMunicipalities'],
+            'carsPerHouseholdTrend' => $data['carsPerHouseholdTrend'],
             'provincialCounts' => $data['provincialCounts'],
+            'provincialTotals' => $data['provincialTotals'],
+            'provincialReadiness' => $data['provincialReadiness'],
+            'municipalReadiness' => $data['municipalReadiness'],
             'largestCities' => $data['largestCities'],
             'yearlyTotals' => $data['yearlyTotals'],
             'yearlyElectricShare' => $data['yearlyElectricShare'],
@@ -102,10 +114,12 @@ class ResultsController extends Controller
         foreach ($topMunicipalities as &$item) {
             $item['per_1000_inwoners'] = round(($item['aantal'] / $item['inwoners']) * 1000, 2);
         }
+        unset($item);
 
         foreach ($lowestMunicipalities as &$item) {
             $item['per_1000_inwoners'] = round(($item['aantal'] / $item['inwoners']) * 1000, 2);
         }
+        unset($item);
 
         $topMunicipalitiesPerCapita = $topMunicipalities;
         usort($topMunicipalitiesPerCapita, fn ($a, $b) => $b['per_1000_inwoners'] <=> $a['per_1000_inwoners']);
@@ -114,6 +128,113 @@ class ResultsController extends Controller
         $lowestMunicipalitiesPerCapita = $lowestMunicipalities;
         usort($lowestMunicipalitiesPerCapita, fn ($a, $b) => $a['per_1000_inwoners'] <=> $b['per_1000_inwoners']);
         $lowestMunicipalitiesPerCapita = array_slice($lowestMunicipalitiesPerCapita, 0, 10);
+
+        $topMunicipalitiesEndUser = [
+            ['rank' => 1, 'gemeente' => 'Amsterdam', 'aantal' => 23164, 'inwoners' => 931298],
+            ['rank' => 2, 'gemeente' => 'Rotterdam', 'aantal' => 15872, 'inwoners' => 670610],
+            ['rank' => 3, 'gemeente' => 'Den Haag', 'aantal' => 13748, 'inwoners' => 566221],
+            ['rank' => 4, 'gemeente' => 'Utrecht', 'aantal' => 12615, 'inwoners' => 374238],
+            ['rank' => 5, 'gemeente' => 'Almere', 'aantal' => 8644, 'inwoners' => 226500],
+            ['rank' => 6, 'gemeente' => 'Haarlemmermeer', 'aantal' => 7896, 'inwoners' => 163128],
+            ['rank' => 7, 'gemeente' => 'Breda', 'aantal' => 7744, 'inwoners' => 188078],
+            ['rank' => 8, 'gemeente' => "'s-Hertogenbosch", 'aantal' => 6888, 'inwoners' => 160757],
+            ['rank' => 9, 'gemeente' => 'Amersfoort', 'aantal' => 6878, 'inwoners' => 161852],
+            ['rank' => 10, 'gemeente' => 'Eindhoven', 'aantal' => 6699, 'inwoners' => 246417],
+        ];
+
+        foreach ($topMunicipalitiesEndUser as &$item) {
+            $item['per_1000_inwoners'] = round(($item['aantal'] / $item['inwoners']) * 1000, 2);
+        }
+        unset($item);
+
+        $vehicleTypesTrendYears = [2020, 2021, 2022, 2023, 2024];
+
+        $vehicleTypesTrend = [
+            ['type' => 'Batterij-elektrisch (BEV, alle voertuigen)', 'waarden' => [260260, 363089, 482961, 624797, 763399]],
+            ['type' => 'Plug-in hybride (PHEV, alle voertuigen)', 'waarden' => [97918, 137743, 187184, 263712, 374982]],
+            ['type' => 'Elektrische 2-/3-wielers', 'waarden' => [77590, 105438, 134668, 149067, 157092]],
+            ['type' => "Lichte elektrische bedrijfsauto's", 'waarden' => [6006, 9031, 13699, 23555, 35251]],
+            ['type' => 'Elektrische lichte vierwielers', 'waarden' => [2766, 3378, 4551, 6753, 9169]],
+            ['type' => "Zware elektrische bedrijfsauto's", 'waarden' => [146, 208, 308, 1459, 2134]],
+            ['type' => 'Elektrische motorfietsen', 'waarden' => [894, 1063, 1372, 1697, 2067]],
+            ['type' => 'Waterstof (FCEV, alle voertuigen)', 'waarden' => [392, 558, 693, 727, 785]],
+        ];
+
+        foreach ($vehicleTypesTrend as $index => &$item) {
+            $item['rank'] = $index + 1;
+        }
+        unset($item);
+
+        $fuelComparisonAbsolute = [
+            'Groningen' => ['Benzine' => 232515, 'Diesel' => 23605, 'LPG' => 4210, 'CNG' => 125, 'Elektrisch' => 13398, 'PHEV' => 10223, 'Waterstof' => 42, 'Totaal' => 302337],
+            'Fryslân' => ['Benzine' => 270736, 'Diesel' => 40659, 'LPG' => 5608, 'CNG' => 173, 'Elektrisch' => 13457, 'PHEV' => 10929, 'Waterstof' => 16, 'Totaal' => 357641],
+            'Drenthe' => ['Benzine' => 218617, 'Diesel' => 26182, 'LPG' => 4482, 'CNG' => 105, 'Elektrisch' => 10831, 'PHEV' => 9829, 'Waterstof' => 30, 'Totaal' => 286465],
+            'Overijssel' => ['Benzine' => 488859, 'Diesel' => 42779, 'LPG' => 7412, 'CNG' => 163, 'Elektrisch' => 25522, 'PHEV' => 22392, 'Waterstof' => 8, 'Totaal' => 625567],
+            'Flevoland' => ['Benzine' => 183150, 'Diesel' => 17417, 'LPG' => 3235, 'CNG' => 36, 'Elektrisch' => 42635, 'PHEV' => 15638, 'Waterstof' => 11, 'Totaal' => 291518],
+            'Gelderland' => ['Benzine' => 879014, 'Diesel' => 63275, 'LPG' => 13764, 'CNG' => 203, 'Elektrisch' => 44870, 'PHEV' => 38967, 'Waterstof' => 138, 'Totaal' => 1111465],
+            'Utrecht' => ['Benzine' => 537856, 'Diesel' => 36276, 'LPG' => 6725, 'CNG' => 115, 'Elektrisch' => 84001, 'PHEV' => 38151, 'Waterstof' => 101, 'Totaal' => 778766],
+            'Noord-Holland' => ['Benzine' => 996700, 'Diesel' => 62542, 'LPG' => 13735, 'CNG' => 297, 'Elektrisch' => 121852, 'PHEV' => 75544, 'Waterstof' => 64, 'Totaal' => 1393453],
+            'Zuid-Holland' => ['Benzine' => 1301103, 'Diesel' => 73042, 'LPG' => 13669, 'CNG' => 317, 'Elektrisch' => 80151, 'PHEV' => 68260, 'Waterstof' => 135, 'Totaal' => 1672627],
+            'Zeeland' => ['Benzine' => 174235, 'Diesel' => 12091, 'LPG' => 1960, 'CNG' => 23, 'Elektrisch' => 7261, 'PHEV' => 7114, 'Waterstof' => 4, 'Totaal' => 215772],
+            'Noord-Brabant' => ['Benzine' => 1128456, 'Diesel' => 77241, 'LPG' => 14302, 'CNG' => 215, 'Elektrisch' => 95480, 'PHEV' => 58714, 'Waterstof' => 66, 'Totaal' => 1479750],
+            'Limburg' => ['Benzine' => 505789, 'Diesel' => 24313, 'LPG' => 7955, 'CNG' => 91, 'Elektrisch' => 18084, 'PHEV' => 17981, 'Waterstof' => 17, 'Totaal' => 615243],
+        ];
+
+        $fuelComparisonPercentage = [];
+        foreach ($fuelComparisonAbsolute as $provincie => $fuels) {
+            $totaal = $fuels['Totaal'];
+            $row = ['provincie' => $provincie];
+            foreach (['Benzine', 'Diesel', 'LPG', 'CNG', 'Elektrisch', 'PHEV', 'Waterstof'] as $label) {
+                $row[$label] = round($fuels[$label] / $totaal * 100, 1);
+            }
+            $fuelComparisonPercentage[] = $row;
+        }
+
+        $chargingPointsProvincial = [
+            ['provincie' => 'Zuid-Holland', 'aantal' => 189902],
+            ['provincie' => 'Noord-Holland', 'aantal' => 166443],
+            ['provincie' => 'Noord-Brabant', 'aantal' => 163699],
+            ['provincie' => 'Gelderland', 'aantal' => 124639],
+            ['provincie' => 'Utrecht', 'aantal' => 94942],
+            ['provincie' => 'Overijssel', 'aantal' => 64945],
+            ['provincie' => 'Limburg', 'aantal' => 59507],
+            ['provincie' => 'Fryslân', 'aantal' => 31995],
+            ['provincie' => 'Drenthe', 'aantal' => 27779],
+            ['provincie' => 'Zeeland', 'aantal' => 26200],
+            ['provincie' => 'Groningen', 'aantal' => 24322],
+            ['provincie' => 'Flevoland', 'aantal' => 20978],
+        ];
+
+        $chargingPointsTopMunicipalities = [
+            ['rank' => 1, 'gemeente' => 'Amsterdam', 'aantal' => 36645],
+            ['rank' => 2, 'gemeente' => 'Rotterdam', 'aantal' => 29764],
+            ['rank' => 3, 'gemeente' => 'Den Haag', 'aantal' => 23238],
+            ['rank' => 4, 'gemeente' => 'Utrecht', 'aantal' => 20999],
+            ['rank' => 5, 'gemeente' => 'Haarlemmermeer', 'aantal' => 13916],
+            ['rank' => 6, 'gemeente' => 'Eindhoven', 'aantal' => 12146],
+            ['rank' => 7, 'gemeente' => 'Breda', 'aantal' => 11806],
+            ['rank' => 8, 'gemeente' => 'Tilburg', 'aantal' => 10577],
+            ['rank' => 9, 'gemeente' => "'s-Hertogenbosch", 'aantal' => 10508],
+            ['rank' => 10, 'gemeente' => 'Apeldoorn', 'aantal' => 10043],
+        ];
+
+        $carsPerHouseholdTrend = [
+            ['jaar' => 2010, 'aantal' => 1.03],
+            ['jaar' => 2011, 'aantal' => 1.04],
+            ['jaar' => 2012, 'aantal' => 1.05],
+            ['jaar' => 2013, 'aantal' => 1.05],
+            ['jaar' => 2014, 'aantal' => 1.05],
+            ['jaar' => 2015, 'aantal' => 1.04],
+            ['jaar' => 2016, 'aantal' => 1.05],
+            ['jaar' => 2017, 'aantal' => 1.06],
+            ['jaar' => 2018, 'aantal' => 1.07],
+            ['jaar' => 2019, 'aantal' => 1.07],
+            ['jaar' => 2020, 'aantal' => 1.07],
+            ['jaar' => 2021, 'aantal' => 1.08],
+            ['jaar' => 2022, 'aantal' => 1.08],
+            ['jaar' => 2023, 'aantal' => 1.08],
+            ['jaar' => 2024, 'aantal' => 1.08],
+        ];
 
         $yearlyTotals = [
             ['jaar' => 2015, 'totaal' => 12000],
@@ -175,19 +296,109 @@ class ResultsController extends Controller
         foreach ($provincialCounts as &$provincie) {
             $provincie['per_1000_inwoners'] = round(($provincie['aantal'] / $provincie['inwoners']) * 1000, 2);
         }
+        unset($provincie);
+
+        $provincialTotals = $provincialCounts;
+        usort($provincialTotals, fn ($a, $b) => $b['aantal'] <=> $a['aantal']);
+        $provincialTotals = array_slice($provincialTotals, 0, 12);
 
         usort($provincialCounts, fn ($a, $b) => $b['per_1000_inwoners'] <=> $a['per_1000_inwoners']);
         $provincialCounts = array_slice($provincialCounts, 0, 12);
+
+        $evByProvince = [];
+        foreach ($provincialCounts as $row) {
+            $evByProvince[$row['provincie']] = (float) $row['aantal'];
+        }
+
+        $chargingPointsPerEvProvincial = [];
+        foreach ($chargingPointsProvincial as $entry) {
+            $provincie = $entry['provincie'];
+            $evs = $evByProvince[$provincie] ?? 0;
+            $chargingPointsPerEvProvincial[] = [
+                'provincie' => $provincie,
+                'aantal_ev' => $evs,
+                'aantal_laadpunten' => $entry['aantal'],
+                'laadpunten_per_ev' => $evs > 0 ? round($entry['aantal'] / $evs, 3) : 0,
+            ];
+        }
+
+        usort($chargingPointsPerEvProvincial, fn ($a, $b) => $b['laadpunten_per_ev'] <=> $a['laadpunten_per_ev']);
+
+        $provincialReadiness = [
+            [
+                'provincie' => 'Flevoland',
+                'score' => 92.1,
+                'ev_per_1000' => 202.39,
+                'laadpunten_per_1000' => 18.4,
+                'groei_2015_2025' => 164.0,
+                'totaal_ev' => 89050,
+            ],
+            [
+                'provincie' => 'Utrecht',
+                'score' => 88.7,
+                'ev_per_1000' => 107.51,
+                'laadpunten_per_1000' => 15.9,
+                'groei_2015_2025' => 151.0,
+                'totaal_ev' => 161270,
+            ],
+            [
+                'provincie' => 'Noord-Holland',
+                'score' => 86.4,
+                'ev_per_1000' => 97.76,
+                'laadpunten_per_1000' => 14.7,
+                'groei_2015_2025' => 142.0,
+                'totaal_ev' => 286450,
+            ],
+        ];
+
+        $municipalReadiness = [
+            [
+                'gemeente' => 'Amsterdam',
+                'score' => 94.8,
+                'ev_per_1000' => 46.36,
+                'laadpunten_per_1000' => 12.8,
+                'groei_2015_2025' => 118.0,
+                'totaal_ev' => 43172,
+            ],
+            [
+                'gemeente' => 'Almere',
+                'score' => 90.6,
+                'ev_per_1000' => 183.67,
+                'laadpunten_per_1000' => 16.1,
+                'groei_2015_2025' => 155.0,
+                'totaal_ev' => 41601,
+            ],
+            [
+                'gemeente' => 'Utrecht',
+                'score' => 89.3,
+                'ev_per_1000' => 38.18,
+                'laadpunten_per_1000' => 11.6,
+                'groei_2015_2025' => 149.0,
+                'totaal_ev' => 14290,
+            ],
+        ];
 
         return [
             'topMunicipalities' => $topMunicipalities,
             'lowestMunicipalities' => $lowestMunicipalities,
             'topMunicipalitiesPerCapita' => $topMunicipalitiesPerCapita,
             'lowestMunicipalitiesPerCapita' => $lowestMunicipalitiesPerCapita,
+            'topMunicipalitiesEndUser' => $topMunicipalitiesEndUser,
+            'vehicleTypesTrend' => $vehicleTypesTrend,
+            'vehicleTypesTrendYears' => $vehicleTypesTrendYears,
+            'fuelComparisonAbsolute' => $fuelComparisonAbsolute,
+            'fuelComparisonPercentage' => $fuelComparisonPercentage,
+            'chargingPointsProvincial' => $chargingPointsProvincial,
+            'chargingPointsPerEvProvincial' => $chargingPointsPerEvProvincial,
+            'chargingPointsTopMunicipalities' => $chargingPointsTopMunicipalities,
+            'carsPerHouseholdTrend' => $carsPerHouseholdTrend,
             'yearlyTotals' => $yearlyTotals,
             'yearlyElectricShare' => $yearlyElectricShare,
             'yearlyEvPerInhabitant' => $yearlyEvPerInhabitant,
             'provincialCounts' => $provincialCounts,
+            'provincialTotals' => $provincialTotals,
+            'provincialReadiness' => $provincialReadiness,
+            'municipalReadiness' => $municipalReadiness,
             'largestCities' => [
                 ['rank' => 1, 'stad' => 'Amsterdam', 'bevolking' => 921300],
                 ['rank' => 2, 'stad' => 'Rotterdam', 'bevolking' => 662000],
@@ -214,6 +425,44 @@ class ResultsController extends Controller
 
         foreach ($data['lowestMunicipalities'] as $row) {
             $rows[] = ['Top 10 gemeenten', $row['gemeente'], $row['aantal'], $row['per_1000_inwoners'], 'Minste elektrische auto\'s', 'gemeente'];
+        }
+
+        foreach ($data['topMunicipalitiesEndUser'] as $row) {
+            $rows[] = ['Top 10 gemeenten', $row['gemeente'], $row['aantal'], $row['per_1000_inwoners'], 'Meeste elektrische auto\'s (eindgebruiker, geen lease-vertekening, 2024)', 'gemeente'];
+        }
+
+        foreach ($data['vehicleTypesTrend'] as $row) {
+            $rows[] = ['Type elektrisch voertuig', $row['type'], end($row['waarden']), null, 'Aantal in 2024 (5-jaars trend: '.implode(',', $row['waarden']).')', 'voertuigtype'];
+        }
+
+        foreach ($data['fuelComparisonAbsolute'] as $provincie => $fuels) {
+            foreach ($fuels as $brandstof => $aantal) {
+                if ($brandstof === 'Totaal') {
+                    continue;
+                }
+                $rows[] = ['Brandstofvergelijking (aantal)', $provincie, $aantal, null, $brandstof, 'provincie'];
+            }
+        }
+
+        foreach ($data['fuelComparisonPercentage'] as $row) {
+            foreach ($row as $brandstof => $waarde) {
+                if ($brandstof === 'provincie') {
+                    continue;
+                }
+                $rows[] = ['Brandstofvergelijking (%)', $row['provincie'], $waarde, null, $brandstof, 'provincie'];
+            }
+        }
+
+        foreach ($data['chargingPointsProvincial'] as $row) {
+            $rows[] = ['Laadinfrastructuur', $row['provincie'], $row['aantal'], null, 'Totaal aantal laadpunten', 'provincie'];
+        }
+
+        foreach ($data['chargingPointsTopMunicipalities'] as $row) {
+            $rows[] = ['Laadinfrastructuur', $row['gemeente'], $row['aantal'], null, 'Totaal aantal laadpunten', 'gemeente'];
+        }
+
+        foreach ($data['carsPerHouseholdTrend'] as $row) {
+            $rows[] = ['Autobezit', (string) $row['jaar'], $row['aantal'], null, 'Auto\'s per huishouden', 'nederland'];
         }
 
         foreach ($data['provincialCounts'] as $row) {

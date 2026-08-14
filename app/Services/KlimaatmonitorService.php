@@ -43,4 +43,27 @@ class KlimaatmonitorService
     {
         return $this->get('Periods');
     }
+
+    public function geoItemsForLevel(string $geoLevel): array
+    {
+        $response = $this->get("GeoLevels('{$geoLevel}')/GeoItems?\$top=1000");
+
+        return $response['value'] ?? $response;
+    }
+
+    public function geoLevelsForVariable(string $variableCode): array
+    {
+        $response = $this->get("Variables('{$variableCode}')/GeoLevels");
+
+        return array_map(fn (array $level) => $level['ExternalCode'], $response['value'] ?? $response);
+    }
+
+    public function valuesForVariable(string $variableCode, string $geoLevel, string $period, string $periodLevel = 'year'): array
+    {
+        $response = $this->get(
+            "Variables('{$variableCode}')/GeoLevels('{$geoLevel}')/PeriodLevels('{$periodLevel}')/Periods('{$period}')/Values"
+        );
+
+        return $response['value'] ?? $response;
+    }
 }

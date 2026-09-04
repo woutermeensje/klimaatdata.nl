@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DelftDataController;
+use App\Http\Controllers\NationalAverageController;
 use App\Http\Controllers\ResultsController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,3 +14,5 @@ Route::get('/', function () {
 Route::get('/resultaten', [ResultsController::class, 'index'])->name('results.index');
 Route::get('/resultaten/download/csv', [ResultsController::class, 'csv'])->name('results.csv');
 Route::get('/resultaten/download/excel', [ResultsController::class, 'excel'])->name('results.excel');
+Route::get('/data/delft', [DelftDataController::class, 'index'])->name('data.delft');
+Route::get('/data/landelijk-gemiddelde', [NationalAverageController::class, 'index'])->name('data.national-average');
